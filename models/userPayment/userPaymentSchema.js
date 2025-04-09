@@ -10,9 +10,12 @@ const userPaymentSchema = new mongoose.Schema(
     },
     professsionalId: { type: SchemaType.ObjectID, ref: "user" },
     bookServiceId: { type: SchemaType.ObjectID, ref: "userBookServ" },
-    proServiceId: { type: SchemaType.ObjectID, ref: "proBookingService" },
+    proServiceId: { type: SchemaType.ObjectID, ref: "proCategory" },
     categoryId: { type: SchemaType.ObjectID, ref: "category" },
-    userAccpetBookingId: { type: SchemaType.ObjectID, ref: "User" },
+    userAccpetBookingId: {
+      type: SchemaType.ObjectID,
+      ref: "proBookingService",
+    },
 
     amount: {
       type: SchemaType.TypeNumber,
@@ -28,25 +31,34 @@ const userPaymentSchema = new mongoose.Schema(
       //  required: true,
       // index: true
     },
-    orderId: { type: SchemaType.TypeString },
+    paypalOrderId: { type: SchemaType.TypeString },
     authorizationId: { type: SchemaType.TypeString },
     payerId: { type: SchemaType.TypeString },
-    payerEmail: { type: SchemaType.TypeString, unique: true },
+    payerEmail: { type: SchemaType.TypeString },
 
     status: {
       type: SchemaType.TypeString,
-      enum: [
-        "AUTHORIZED",
-        "CAPTURED",
-        "VOIDED",
-        "Success",
-        "Failed",
-        "Pending",
-        "Released",
-        "Refunded",
-      ],
       default: "Pending",
     },
+
+    payer: {
+      payerId: { type: String }, // payer_id
+      payerEmail: { type: String },
+      payerFirstName: { type: String },
+      payerLastName: { type: String },
+      payerCountryCode: { type: String },
+    },
+
+    paymentSource: {
+      paypalAccountId: { type: String },
+      paypalEmail: { type: String },
+      paypalAccountStatus: { type: String },
+    },
+
+    purchaseUnitReference: { type: String }, // purchase_units[0].reference_id
+
+    paypalLink: { type: String }, // links[0].href
+
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

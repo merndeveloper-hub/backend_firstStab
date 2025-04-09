@@ -17,9 +17,9 @@ const schemaBody = Joi.object().keys({
   bookServiceId: Joi.string(),
   addInstruction: Joi.string(),
   userAccpetBookingId: Joi.string(),
-  serviceType: Joi.string(),
+  serviceType: Joi.string().required(),
 
-  // videoRoomName: Joi.string()
+  
 });
 
 //Rejected
@@ -40,83 +40,72 @@ const userAcceptProServiceRequest = async (req, res) => {
       0,
       4
     )}_pro${professsionalId.slice(0, 4)}_${timestamp}`;
-if(serviceType == "isVirtual"){
-
-
-
-    const getProBookService = await updateDocument(
-      "proBookingService",
-      { _id: id },
-      { status: "Accepted", videoRoomName }
-    );
-
-    if (!getProBookService || getProBookService.length == 0) {
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          message: "No professional quotes available at the moment.",
-        });
-    }
-
-    const userBookServiceUpdate = await updateDocument(
-      "userBookServ",
-      { _id: getProBookService.bookServiceId },
-      { status: "Accepted", videoRoomName }
-    );
-
-    const remainingProRejected = await updateDocuments(
-      "proBookingService",
-      { bookServiceId: getProBookService.bookServiceId, status: "Pending" },
-      { status: "Rejected" }
-    );
-
-    //const getPaymentLink = await createPaypalOrder()
-
-    return res
-      .status(200)
-      .json({
-        status: 200,
-        getProBookService,
-        message: "Updated Book Service successfully",
-      });
-    }else {
+    if (serviceType == "isVirtual") {
       const getProBookService = await updateDocument(
         "proBookingService",
         { _id: id },
-        { status: "Accepted", chatChannelName }
+        { status: "Accepted", videoRoomName }
       );
-  
+
       if (!getProBookService || getProBookService.length == 0) {
-        return res
-          .status(200)
-          .json({
-            status: 200,
-            message: "No professional quotes available at the moment.",
-          });
+        return res.status(200).json({
+          status: 200,
+          message: "No professional quotes available at the moment.",
+        });
       }
-  
+
       const userBookServiceUpdate = await updateDocument(
         "userBookServ",
         { _id: getProBookService.bookServiceId },
-        { status: "Accepted", chatChannelName }
+        { status: "Accepted", videoRoomName }
       );
-  
+
       const remainingProRejected = await updateDocuments(
         "proBookingService",
         { bookServiceId: getProBookService.bookServiceId, status: "Pending" },
         { status: "Rejected" }
       );
-  
+
       //const getPaymentLink = await createPaypalOrder()
-  
-      return res
-        .status(200)
-        .json({
+
+      return res.status(200).json({
+        status: 200,
+        getProBookService,
+        message: "Updated Book Service successfully",
+      });
+    } else {
+      const getProBookService = await updateDocument(
+        "proBookingService",
+        { _id: id },
+        { status: "Accepted", chatChannelName }
+      );
+
+      if (!getProBookService || getProBookService.length == 0) {
+        return res.status(200).json({
           status: 200,
-          getProBookService,
-          message: "Updated Book Service successfully",
+          message: "No professional quotes available at the moment.",
         });
+      }
+
+      const userBookServiceUpdate = await updateDocument(
+        "userBookServ",
+        { _id: getProBookService.bookServiceId },
+        { status: "Accepted", chatChannelName }
+      );
+
+      const remainingProRejected = await updateDocuments(
+        "proBookingService",
+        { bookServiceId: getProBookService.bookServiceId, status: "Pending" },
+        { status: "Rejected" }
+      );
+
+      //const getPaymentLink = await createPaypalOrder()
+
+      return res.status(200).json({
+        status: 200,
+        getProBookService,
+        message: "Updated Book Service successfully",
+      });
     }
   } catch (e) {
     console.log(e);

@@ -4,7 +4,7 @@ const paymentCancel = (req, res) => {
   try {
     const { token } = req.query;
     const deleteCancelPaypent = deleteDocument("userPayment", {
-      orderId: token,
+      paypalOrderId: token,
     });
 
     return res.send("<html><body style='background:#fff;'></body></html>");

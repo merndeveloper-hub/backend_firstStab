@@ -19,6 +19,7 @@ import express from "express";
 // const swap = require("./swap");
 // const userCollection = require("./userCollection");
  import booking from "./booking/index.js";
+ import serviceDetail from "./serviceDetail/index.js";
  
  import faqQuestion from "./faqQuestion/index.js";
 
@@ -33,6 +34,7 @@ const router = express.Router();
 // router.use("/profile", profile);
 // router.use("/follow", tokenVerification, follow);
 // router.use("/search", search);
+router.use("/servicedetail", serviceDetail);
 router.use("/booking", booking);
 router.use("/profile", updateProfile); // after login check the token
  router.use("/business", business);
